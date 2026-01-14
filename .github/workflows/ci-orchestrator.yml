@@ -955,7 +955,7 @@ jobs:
           - {name: "Mission", test_file: "mavros_posix_test_mission.test", params: "mission:=MC_mission_box vehicle:=iris"}
           - {name: "Offboard", test_file: "mavros_posix_tests_offboard_posctl.test", params: "vehicle:=iris"}
     container:
-      image: px4io/px4-dev-ros-noetic:2021-09-08
+      image: px4io/px4-dev-ros-melodic:2021-09-08
     steps:
       - uses: runs-on/action@v2
 
@@ -969,14 +969,14 @@ jobs:
       - name: Build SITL and Gazebo
         shell: bash
         run: |
-          . /opt/ros/noetic/setup.bash
+          . /opt/ros/melodic/setup.bash
           make px4_sitl_default
           make px4_sitl_default sitl_gazebo-classic
 
       - name: Run MAVROS tests
         shell: bash
         run: |
-          . /opt/ros/noetic/setup.bash
+          . /opt/ros/melodic/setup.bash
           test/rostest_px4_run.sh ${{ matrix.config.test_file }} ${{ matrix.config.params }}
         timeout-minutes: 30
 
