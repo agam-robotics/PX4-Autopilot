@@ -1287,7 +1287,7 @@ float Ekf::getHeadingInnov() const
 
 #endif // CONFIG_EKF2_EXTERNAL_VISION
 
-	return 0.f;
+	return _mag_heading_innov_lpf.getState();
 }
 
 float Ekf::getHeadingInnovVar() const
