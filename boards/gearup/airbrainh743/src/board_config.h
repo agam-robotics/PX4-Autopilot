@@ -112,9 +112,23 @@
 #define BOARD_HAS_PWM  DIRECT_PWM_OUTPUT_CHANNELS
 
 
-/* Tone alarm output - PA15 */
-#define GPIO_TONE_ALARM_IDLE    /* PA15 */ (GPIO_OUTPUT|GPIO_PUSHPULL|GPIO_SPEED_2MHz|GPIO_OUTPUT_CLEAR|GPIO_PORTA|GPIO_PIN15)
-#define GPIO_TONE_ALARM_GPIO    /* PA15 */ (GPIO_OUTPUT|GPIO_PUSHPULL|GPIO_SPEED_2MHz|GPIO_OUTPUT_CLEAR|GPIO_PORTA|GPIO_PIN15)
+/* Tone alarm output
+ *
+ * DISABLED: The buzzer is on PA15 which can only use TIM2. However, TIM2 is also
+ * used for motor outputs M7 (PB10, TIM2_CH3) and M8 (PB11, TIM2_CH4). Since the
+ * tone alarm driver changes the timer's prescaler and auto-reload registers
+ * (which are shared across all channels), enabling the buzzer would cause the
+ * PWM frequency for M7/M8 to change during tone playback - this is unsafe for
+ * motor control.
+ *
+ * To enable the buzzer, remove M7/M8 from timer_config.cpp, set
+ * DIRECT_PWM_OUTPUT_CHANNELS to 7, BOARD_NUM_IO_TIMERS to 3, and uncomment the
+ * tone alarm defines below.
+ */
+// #define TONE_ALARM_TIMER        2  /* Timer 2 */
+// #define TONE_ALARM_CHANNEL      1  /* PA15 TIM2_CH1 */
+// #define GPIO_TONE_ALARM_IDLE    /* PA15 */ (GPIO_OUTPUT|GPIO_PUSHPULL|GPIO_SPEED_2MHz|GPIO_OUTPUT_CLEAR|GPIO_PORTA|GPIO_PIN15)
+// #define GPIO_TONE_ALARM         GPIO_TIM2_CH1OUT_2
 
 
 /* ICM42688P FSYNC - directly connected to IMU via GPIO (no timer).
