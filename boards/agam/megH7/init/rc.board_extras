@@ -8,7 +8,7 @@
 # 	atxxxx start -s
 # fi
 
-atxxxx -b 3 -s start
+#atxxxx -b 3 -s start
 
 
 # DShot telemetry is always on UART7

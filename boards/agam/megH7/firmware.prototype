@@ -1,13 +1,13 @@
 {
-    "board_id": 1013,
+    "board_id": 1940,
     "magic": "PX4FWv1",
-    "description": "Firmware for the agamMegH7 1v1 boards",
+    "description": "Firmware for the Agam MegH7 v1.2 boards",
     "image": "",
     "build_time": 0,
-    "summary": "agamMegH7",
+    "summary": "AgamMegH7",
     "version": "0.1",
     "image_size": 0,
-    "image_maxsize": 1966080,
+    "image_maxsize": 1835008,
     "git_identity": "",
     "board_revision": 0
 }

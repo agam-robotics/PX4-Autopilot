@@ -4,7 +4,7 @@
 #------------------------------------------------------------------------------
 board_adc start
 
-# Internal SPI bus ICM-42688P
+# Internal SPI bus ICM45686
 icm45686 -R 2 -b 2 -s start
 
 # Internal Baro

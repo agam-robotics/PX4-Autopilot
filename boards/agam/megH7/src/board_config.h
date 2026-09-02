@@ -81,7 +81,6 @@
 	/* PC0  */  GPIO_ADC123_INP10, \
 	/* PC1  */  GPIO_ADC123_INP11, \
 	/* PA4  */  GPIO_ADC12_INP18, \
-	/* PA7  */  GPIO_ADC12_INP7, \
 	/* PC4  */  GPIO_ADC12_INP4, \
 	/* PC5  */  GPIO_ADC12_INP8
 
@@ -105,28 +104,27 @@
 #define BOARD_BATTERY1_A_PER_V       (40.0f)
 #define BOARD_BATTERY2_V_DIV         (11.0f)     /* measured with the provided PM board */
 
+#define BOARD_BATTERY_ADC_VOLTAGE_FILTER_S 0.075f
+#define BOARD_BATTERY_ADC_CURRENT_FILTER_S 0.125f
+
+#define BOARD_NUMBER_BRICKS             1
+
+#define BOARD_ADC_BRICK_VALID		1
 
 /* CAN Silence
  *
  * Silent mode control \ ESC Mux select
  */
 
-#define GPIO_CAN1_SILENT_S0  /* PD3  */ (GPIO_OUTPUT|GPIO_PUSHPULL|GPIO_SPEED_2MHz|GPIO_OUTPUT_CLEAR|GPIO_PORTD|GPIO_PIN3)
+//#define GPIO_CAN1_SILENT_S0  /* PD3  */ (GPIO_OUTPUT|GPIO_PUSHPULL|GPIO_SPEED_2MHz|GPIO_OUTPUT_CLEAR|GPIO_PORTD|GPIO_PIN3)
 
 
 /* PWM
  */
-#define DIRECT_PWM_OUTPUT_CHANNELS   10
-#define DIRECT_INPUT_TIMER_CHANNELS  10
+#define DIRECT_PWM_OUTPUT_CHANNELS   8
+#define DIRECT_INPUT_TIMER_CHANNELS  8
 
 #define BOARD_HAS_PWM  DIRECT_PWM_OUTPUT_CHANNELS
-
-
-/* Spare GPIO */
-
-// #define GPIO_PG6                        /* PG6  */  (GPIO_INPUT|GPIO_PULLUP|GPIO_PORTG|GPIO_PIN6)
-// #define GPIO_PD15                       /* PD15 */  (GPIO_INPUT|GPIO_FLOAT|GPIO_PORTD|GPIO_PIN15)
-// #define GPIO_PG15                       /* PG15 */  (GPIO_INPUT|GPIO_PULLUP|GPIO_PORTG|GPIO_PIN15)
 
 
 /* Tone alarm output */
@@ -147,11 +145,11 @@
 
 #define GPIO_OTGFS_VBUS         /* PE2 */ (GPIO_INPUT|GPIO_PULLDOWN|GPIO_SPEED_100MHz|GPIO_PORTE|GPIO_PIN2)
 
+#define BOARD_ADC_USB_CONNECTED (px4_arch_gpioread(GPIO_OTGFS_VBUS))
 
 /* High-resolution timer */
 #define HRT_TIMER               2  /* use timer8 for the HRT */
 #define HRT_TIMER_CHANNEL       1  /* use capture/compare channel 3 */
-
 
 /* RC Serial port */
 #define RC_SERIAL_PORT          "/dev/ttyS4"
@@ -175,7 +173,6 @@
 		PX4_ADC_GPIO, \
 		GPIO_CAN1_TX, \
 		GPIO_CAN1_RX, \
-		GPIO_CAN1_SILENT_S0, \
 		GPIO_nLED_BLUE, \
 		GPIO_nLED_GREEN, \
 		GPIO_TONE_ALARM_IDLE, \
@@ -183,7 +180,7 @@
 
 #define BOARD_ENABLE_CONSOLE_BUFFER
 
-#define BOARD_NUM_IO_TIMERS 4
+#define BOARD_NUM_IO_TIMERS 3
 
 
 __BEGIN_DECLS
