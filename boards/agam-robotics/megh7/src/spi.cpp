@@ -41,7 +41,7 @@ constexpr px4_spi_bus_t px4_spi_buses[SPI_BUS_MAX_BUS_ITEMS] = {
 		initSPIConfigExternal(SPI::CS{GPIO::PortE, GPIO::Pin11}),
 	}),
 	initSPIBus(SPI::Bus::SPI2, {
-		initSPIDevice(DRV_IMU_DEVTYPE_ICM45686, SPI::CS{GPIO::PortD, GPIO::Pin11}),
+		initSPIDevice(DRV_IMU_DEVTYPE_ICM45686, SPI::CS{GPIO::PortD, GPIO::Pin11}, SPI::DRDY{GPIO::PortB, GPIO::Pin2}),
 	}),
 	initSPIBus(SPI::Bus::SPI3, {
 		initSPIDevice(DRV_OSD_DEVTYPE_ATXXXX, SPI::CS{GPIO::PortD, GPIO::Pin10}),
