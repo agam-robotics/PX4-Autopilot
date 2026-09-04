@@ -74,13 +74,13 @@ static constexpr const char *battery_fault_reason_str(battery_fault_reason_t bat
 
 void BatteryChecks::checkAndReport(const Context &context, Report &reporter)
 {
-	if (circuit_breaker_enabled_by_val(_param_cbrk_supply_chk.get(), CBRK_SUPPLY_CHK_KEY)) {
-		// Reset related failsafe flags otherwise failures from before disabling the check cause failsafes without reported reason
-		reporter.failsafeFlags().battery_unhealthy = false;
-		reporter.failsafeFlags().battery_low_remaining_time = false;
-		reporter.failsafeFlags().battery_warning = battery_status_s::WARNING_NONE;
-		return;
-	}
+	// This breaker is documented for silencing the "power valid" (system_power) prearm check on
+	// boards without avionics-rail sensing (see powerCheck.cpp). It must not also disable the
+	// in-flight low/critical/emergency battery failsafe, which failsafe.cpp derives from
+	// failsafeFlags().battery_warning independently of system_power - so that flag is always kept
+	// accurate below, and only the arming-check/health reporting is skipped while it's enabled.
+	const bool power_supply_chk_disabled = circuit_breaker_enabled_by_val(_param_cbrk_supply_chk.get(),
+			CBRK_SUPPLY_CHK_KEY);
 
 	bool battery_has_fault = false;
 	// There are possibly multiple batteries, and we can't know which ones serve which purpose. So the safest
@@ -193,6 +193,16 @@ void BatteryChecks::checkAndReport(const Context &context, Report &reporter)
 
 	} else {
 		reporter.failsafeFlags().battery_warning = worst_warning;
+	}
+
+	if (power_supply_chk_disabled) {
+		// Reset the failsafe flags that depend on power-supply sensing, and skip arming-check/health
+		// reporting below, otherwise failures from before disabling the check cause failsafes without
+		// reported reason. failsafeFlags().battery_warning is already set above and left untouched, so
+		// the in-flight low/critical/emergency battery failsafe keeps working.
+		reporter.failsafeFlags().battery_unhealthy = false;
+		reporter.failsafeFlags().battery_low_remaining_time = false;
+		return;
 	}
 
 	const bool battery_warning = reporter.failsafeFlags().battery_warning > battery_status_s::WARNING_NONE
