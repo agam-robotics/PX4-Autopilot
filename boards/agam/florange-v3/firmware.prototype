@@ -1,0 +1,13 @@
+{
+    "board_id": 1937,
+    "magic": "AGAMFWv1",
+    "description": "Firmware for the Agam FloRange v3 board",
+    "image": "",
+    "build_time": 0,
+    "summary": "AGAMFLORANGEV3",
+    "version": "1.0",
+    "image_size": 0,
+    "image_maxsize": 1032192,
+    "git_identity": "",
+    "board_revision": 0
+}
