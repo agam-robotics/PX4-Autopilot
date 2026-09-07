@@ -118,3 +118,7 @@ _emscripten_sdk/
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Agam local board backup dir and prebuilt bootloader bin
+boards/agam_backup/
+boards/agam/megH7/extras/agam_megH7_bootloader.bin
