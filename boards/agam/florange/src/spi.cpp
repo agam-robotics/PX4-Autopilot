@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2020 PX4 Development Team. All rights reserved.
+ *   Copyright (C) 2021 PX4 Development Team. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,46 +31,22 @@
  *
  ****************************************************************************/
 
-/**
- * @author RJ Gritter <rjgritter657@gmail.com>
- */
+#include <px4_arch/spi_hw_description.h>
+#include <drivers/drv_sensor.h>
+#include <nuttx/spi/spi.h>
 
-#pragma once
-
-#include "sensor_bridge.hpp"
-#include <uORB/topics/distance_sensor.h>
-#include <drivers/rangefinder/PX4Rangefinder.hpp>
-
-#include <uavcan/equipment/range_sensor/Measurement.hpp>
-
-class UavcanRangefinderBridge : public UavcanSensorBridgeBase
-{
-public:
-	static const char *const NAME;
-
-	UavcanRangefinderBridge(uavcan::INode &node, NodeInfoPublisher *node_info_publisher);
-
-	const char *get_name() const override { return NAME; }
-
-	int init() override;
-
-private:
-
-	int init_driver(uavcan_bridge::Channel *channel) override;
-
-	void range_sub_cb(const uavcan::ReceivedDataStructure<uavcan::equipment::range_sensor::Measurement> &msg);
-
-	typedef uavcan::MethodBinder < UavcanRangefinderBridge *,
-		void (UavcanRangefinderBridge::*)
-		(const uavcan::ReceivedDataStructure<uavcan::equipment::range_sensor::Measurement> &) >
-		RangeCbBinder;
-
-	uavcan::Subscriber<uavcan::equipment::range_sensor::Measurement, RangeCbBinder> _sub_range_data;
-
-	float _range_min_m{0.0f};
-	float _range_max_m{0.0f};
-	uint8_t _orientation{distance_sensor_s::ROTATION_DOWNWARD_FACING};
-
-	bool _channel_initialized[DEFAULT_MAX_CHANNELS] {};
-
+constexpr px4_spi_bus_t px4_spi_buses[SPI_BUS_MAX_BUS_ITEMS] = {
+	initSPIBus(SPI::Bus::SPI1, {
+		initSPIDevice(DRV_GYR_DEVTYPE_BMI088, SPI::CS{GPIO::PortA, GPIO::Pin15}, SPI::DRDY{GPIO::PortA, GPIO::Pin10}),
+		initSPIDevice(DRV_ACC_DEVTYPE_BMI088, SPI::CS{GPIO::PortA, GPIO::Pin4}, SPI::DRDY{GPIO::PortB, GPIO::Pin0}),
+		initSPIDevice(DRV_IMU_DEVTYPE_ICM42688P, SPI::CS{GPIO::PortA, GPIO::Pin4}, SPI::DRDY{GPIO::PortB, GPIO::Pin0}),
+		initSPIDevice(DRV_IMU_DEVTYPE_IIM42652, SPI::CS{GPIO::PortA, GPIO::Pin4}, SPI::DRDY{GPIO::PortB, GPIO::Pin0}),
+		initSPIDevice(DRV_FLOW_DEVTYPE_PAW3902, SPI::CS{GPIO::PortB, GPIO::Pin5}, SPI::DRDY{GPIO::PortB, GPIO::Pin2}),
+		initSPIDevice(DRV_FLOW_DEVTYPE_PAA3905, SPI::CS{GPIO::PortB, GPIO::Pin5}, SPI::DRDY{GPIO::PortB, GPIO::Pin2}),
+	}),
+	initSPIBus(SPI::Bus::SPI2, {
+		initSPIDevice(DRV_DEVTYPE_UNUSED, SPI::CS{GPIO::PortB, GPIO::Pin12}, SPI::DRDY{GPIO::PortB, GPIO::Pin4}),
+	}),
 };
+
+static constexpr bool unused = validateSPIConfig(px4_spi_buses);

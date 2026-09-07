@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2020 PX4 Development Team. All rights reserved.
+ *   Copyright (c) 2021 PX4 Development Team. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,46 +31,14 @@
  *
  ****************************************************************************/
 
-/**
- * @author RJ Gritter <rjgritter657@gmail.com>
- */
-
 #pragma once
 
-#include "sensor_bridge.hpp"
-#include <uORB/topics/distance_sensor.h>
-#include <drivers/rangefinder/PX4Rangefinder.hpp>
+// DMA1 Channel/Stream Selections
+//--------------------------------------------//---------------------------//----------------
+#define DMACHAN_SPI2_RX    DMAMAP_SPI2_RX   // DMA1, Stream 3, Channel 0
+#define DMACHAN_SPI2_TX    DMAMAP_SPI2_TX   // DMA1, Stream 4, Channel 0
 
-#include <uavcan/equipment/range_sensor/Measurement.hpp>
-
-class UavcanRangefinderBridge : public UavcanSensorBridgeBase
-{
-public:
-	static const char *const NAME;
-
-	UavcanRangefinderBridge(uavcan::INode &node, NodeInfoPublisher *node_info_publisher);
-
-	const char *get_name() const override { return NAME; }
-
-	int init() override;
-
-private:
-
-	int init_driver(uavcan_bridge::Channel *channel) override;
-
-	void range_sub_cb(const uavcan::ReceivedDataStructure<uavcan::equipment::range_sensor::Measurement> &msg);
-
-	typedef uavcan::MethodBinder < UavcanRangefinderBridge *,
-		void (UavcanRangefinderBridge::*)
-		(const uavcan::ReceivedDataStructure<uavcan::equipment::range_sensor::Measurement> &) >
-		RangeCbBinder;
-
-	uavcan::Subscriber<uavcan::equipment::range_sensor::Measurement, RangeCbBinder> _sub_range_data;
-
-	float _range_min_m{0.0f};
-	float _range_max_m{0.0f};
-	uint8_t _orientation{distance_sensor_s::ROTATION_DOWNWARD_FACING};
-
-	bool _channel_initialized[DEFAULT_MAX_CHANNELS] {};
-
-};
+//  DMA2 Channel/Stream Selections
+//--------------------------------------------//---------------------------//----------------
+#define DMACHAN_SPI1_RX    DMAMAP_SPI1_RX_2   // DMA2, Stream 2, Channel 3
+#define DMACHAN_SPI1_TX    DMAMAP_SPI1_TX_2   // DMA2, Stream 5, Channel 3

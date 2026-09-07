@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2020 PX4 Development Team. All rights reserved.
+ *   Copyright (c) 2021 PX4 Development Team. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -32,45 +32,84 @@
  ****************************************************************************/
 
 /**
- * @author RJ Gritter <rjgritter657@gmail.com>
+ * @file led.c
+ *
+ * board LED backend.
  */
 
-#pragma once
+#include <px4_platform_common/px4_config.h>
 
-#include "sensor_bridge.hpp"
-#include <uORB/topics/distance_sensor.h>
-#include <drivers/rangefinder/PX4Rangefinder.hpp>
+#include <stdbool.h>
 
-#include <uavcan/equipment/range_sensor/Measurement.hpp>
+#include "stm32.h"
+#include "board_config.h"
 
-class UavcanRangefinderBridge : public UavcanSensorBridgeBase
-{
-public:
-	static const char *const NAME;
+#include <arch/board/board.h>
 
-	UavcanRangefinderBridge(uavcan::INode &node, NodeInfoPublisher *node_info_publisher);
+/*
+ * Ideally we'd be able to get these from up_internal.h,
+ * but since we want to be able to disable the NuttX use
+ * of leds for system indication at will and there is no
+ * separate switch, we need to build independent of the
+ * CONFIG_ARCH_LEDS configuration switch.
+ */
+__BEGIN_DECLS
+extern void led_init(void);
+extern void bootloader_led_on(int led);
+extern void bootloader_led_off(int led);
+extern void led_on(int led);
+extern void led_off(int led);
+extern void led_toggle(int led);
+__END_DECLS
 
-	const char *get_name() const override { return NAME; }
-
-	int init() override;
-
-private:
-
-	int init_driver(uavcan_bridge::Channel *channel) override;
-
-	void range_sub_cb(const uavcan::ReceivedDataStructure<uavcan::equipment::range_sensor::Measurement> &msg);
-
-	typedef uavcan::MethodBinder < UavcanRangefinderBridge *,
-		void (UavcanRangefinderBridge::*)
-		(const uavcan::ReceivedDataStructure<uavcan::equipment::range_sensor::Measurement> &) >
-		RangeCbBinder;
-
-	uavcan::Subscriber<uavcan::equipment::range_sensor::Measurement, RangeCbBinder> _sub_range_data;
-
-	float _range_min_m{0.0f};
-	float _range_max_m{0.0f};
-	uint8_t _orientation{distance_sensor_s::ROTATION_DOWNWARD_FACING};
-
-	bool _channel_initialized[DEFAULT_MAX_CHANNELS] {};
-
+#  define xlat(p) (p)
+static uint32_t g_ledmap[] = {
+	GPIO_nLED_BLUE,
+	GPIO_nLED_RED,
 };
+
+__EXPORT void led_init(void)
+{
+	/* Configure LED GPIOs for output */
+	for (size_t l = 0; l < (sizeof(g_ledmap) / sizeof(g_ledmap[0])); l++) {
+		stm32_configgpio(g_ledmap[l]);
+	}
+}
+
+__EXPORT void bootloader_led_on(int led)
+{
+	/* Pull Down to switch on */
+	stm32_gpiowrite(led, false);
+}
+
+__EXPORT void bootloader_led_off(int led)
+{
+	/* Pull Up to switch on */
+	stm32_gpiowrite(led, true);
+}
+
+static void phy_set_led(int led, bool state)
+{
+	/* Pull Down to switch on */
+	stm32_gpiowrite(g_ledmap[led], !state);
+}
+
+static bool phy_get_led(int led)
+{
+	return !stm32_gpioread(g_ledmap[led]);
+}
+
+__EXPORT void led_on(int led)
+{
+	phy_set_led(xlat(led), true);
+}
+
+__EXPORT void led_off(int led)
+{
+	phy_set_led(xlat(led), false);
+}
+
+__EXPORT void led_toggle(int led)
+{
+	phy_set_led(xlat(led), !phy_get_led(xlat(led)));
+}
