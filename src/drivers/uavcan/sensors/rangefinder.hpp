@@ -69,6 +69,7 @@ private:
 
 	float _range_min_m{0.0f};
 	float _range_max_m{0.0f};
+	uint8_t _orientation{distance_sensor_s::ROTATION_DOWNWARD_FACING};
 
 	bool _channel_initialized[DEFAULT_MAX_CHANNELS] {};
 

@@ -57,10 +57,13 @@ matrix::Eulerf uavcan_orientation_to_euler(const uavcan::CoarseOrientation &orie
 	return {roll, pitch, yaw};
 }
 
-uint8_t uavcan_orientation_to_distance_sensor_orientation(const uavcan::CoarseOrientation &orientation)
+uint8_t uavcan_orientation_to_distance_sensor_orientation(const uavcan::CoarseOrientation &orientation,
+		uint8_t fallback_orientation)
 {
 	if (!orientation.orientation_defined) {
-		return distance_sensor_s::ROTATION_DOWNWARD_FACING;
+		// Device doesn't report its own mounting orientation -- use the configured fallback
+		// (UAVCAN_RNG_ROT) rather than assuming downward-facing.
+		return fallback_orientation;
 	}
 
 	// The beam runs along the sensor x-axis, so roll turns it about itself and cannot change where
@@ -106,6 +109,10 @@ int UavcanRangefinderBridge::init()
 	// Initialize min/max range from params
 	param_get(param_find("UAVCAN_RNG_MIN"), &_range_min_m);
 	param_get(param_find("UAVCAN_RNG_MAX"), &_range_max_m);
+
+	int32_t orientation = distance_sensor_s::ROTATION_DOWNWARD_FACING;
+	param_get(param_find("UAVCAN_RNG_ROT"), &orientation);
+	_orientation = (uint8_t)orientation;
 
 	int res = _sub_range_data.start(RangeCbBinder(this, &UavcanRangefinderBridge::range_sub_cb));
 
@@ -164,7 +171,8 @@ void UavcanRangefinderBridge::range_sub_cb(const
 		_channel_initialized[channel_idx] = true;
 	}
 
-	const uint8_t orientation = uavcan_orientation_to_distance_sensor_orientation(msg.beam_orientation_in_body_frame);
+	const uint8_t orientation = uavcan_orientation_to_distance_sensor_orientation(msg.beam_orientation_in_body_frame,
+			_orientation);
 	rangefinder->set_orientation(orientation);
 
 	// TOO_CLOSE, TOO_FAR and UNDEFINED readings do not carry a usable range
@@ -200,7 +208,7 @@ int UavcanRangefinderBridge::init_driver(uavcan_bridge::Channel *channel)
 	// Build device ID using node_id and interface index
 	uint32_t device_id = make_uavcan_device_id(static_cast<uint8_t>(channel->node_id), channel->iface_index);
 
-	channel->h_driver = new PX4Rangefinder(device_id, distance_sensor_s::ROTATION_DOWNWARD_FACING);
+	channel->h_driver = new PX4Rangefinder(device_id, _orientation);
 
 	if (channel->h_driver == nullptr) {
 		return PX4_ERROR;
