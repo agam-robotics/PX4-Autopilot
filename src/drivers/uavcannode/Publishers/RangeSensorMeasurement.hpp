@@ -116,11 +116,56 @@ public:
 				range_sensor.reading_type = uavcan::equipment::range_sensor::Measurement::READING_TYPE_UNDEFINED;
 			}
 
+			setBeamOrientation(dist.orientation, range_sensor);
+
 			uavcan::Publisher<uavcan::equipment::range_sensor::Measurement>::broadcast(range_sensor);
 
 			// ensure callback is registered
 			uORB::SubscriptionCallbackWorkItem::registerCallback();
 		}
+	}
+
+private:
+	// Encodes a distance_sensor_s::ROTATION_* value into DroneCAN's CoarseOrientation
+	// (fixed-axis roll/pitch/yaw in 15-degree steps), so a receiving autopilot gets the
+	// sensor's real mounting orientation instead of having to assume one. Inverse of
+	// uavcan_orientation_to_distance_sensor_orientation() in
+	// src/drivers/uavcan/sensors/rangefinder.cpp.
+	static bool setBeamOrientation(uint8_t orientation, uavcan::equipment::range_sensor::Measurement &range_sensor)
+	{
+		// Valid orientations from distance_sensor_s: ROTATION_YAW_* (0-7), ROTATION_UPWARD_FACING (24), ROTATION_DOWNWARD_FACING (25).
+		const bool is_yaw = (orientation <= 7);
+		const bool is_pitch = (orientation == distance_sensor_s::ROTATION_UPWARD_FACING)
+				      || (orientation == distance_sensor_s::ROTATION_DOWNWARD_FACING);
+
+		if (!is_yaw && !is_pitch) {
+			// e.g. ROTATION_CUSTOM (quaternion) -- not representable in this coarse
+			// fixed-axis form, leave the orientation undefined.
+			return false;
+		}
+
+		int pitch_units = 0;
+		int yaw_units = 0;
+
+		if (is_pitch) {
+			pitch_units = (orientation == distance_sensor_s::ROTATION_UPWARD_FACING) ? 6 : -6;
+
+		} else {
+			int heading_deg = orientation * 45;
+
+			if (heading_deg > 180) {
+				heading_deg -= 360;
+			}
+
+			yaw_units = heading_deg / 15;
+		}
+
+		range_sensor.beam_orientation_in_body_frame.fixed_axis_roll_pitch_yaw[0] = 0;
+		range_sensor.beam_orientation_in_body_frame.fixed_axis_roll_pitch_yaw[1] = pitch_units;
+		range_sensor.beam_orientation_in_body_frame.fixed_axis_roll_pitch_yaw[2] = yaw_units;
+		range_sensor.beam_orientation_in_body_frame.orientation_defined = true;
+
+		return true;
 	}
 };
 } // namespace uavcannode
