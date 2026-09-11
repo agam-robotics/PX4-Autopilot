@@ -324,8 +324,10 @@ bool AFBRS50::processMeasurement()
 		quality = 0;
 	}
 
+	// Report out of range as beyond max_distance rather than 0. Consumers such as
+	// collision prevention read 0 as an obstacle at zero range and discard it.
 	if (distance > _max_distance * 1.5f) {
-		distance = 0.0;
+		distance = _max_distance + 1.0f;
 		quality = 0;
 	}
 
