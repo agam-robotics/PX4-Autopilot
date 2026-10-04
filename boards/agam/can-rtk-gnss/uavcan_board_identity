@@ -6,8 +6,8 @@ add_definitions(
 	-DAPP_VERSION_MINOR=${uavcanblid_sw_version_minor}
 )
 
-set(uavcanblid_hw_version_major 0)
-set(uavcanblid_hw_version_minor 1)
+set(uavcanblid_hw_version_major 7)
+set(uavcanblid_hw_version_minor 141)
 set(uavcanblid_name "\"org.agam.can-rtk-gnss\"")
 
 add_definitions(
