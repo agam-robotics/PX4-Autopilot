@@ -1,0 +1,42 @@
+1.
+Parameters or the provision of definition of
+BOARD_BATTERY_ADC_VOLTAGE_FILTER_S 0.075f and
+BOARD_BATTERY_ADC_CURRENT_FILTER_S 0.125f
+for analog voltage and current filtering is removed after v1.17.0.
+
+v1.17.0 onwards you will find below parameters added instead which can be controlled using paramater settings
+BAT1_I_FILT
+BAT1_V_FILT
+
+you can add below lines in the default parameter list under init folder.
+param set-default BAT1_V_FILT 0.075
+param set-default BAT1_I_FILT 0.5
+
+2.
+In the file
+src/modules/commander/HealthAndArmingChecks/checks/batteryCheck.cpp
+I have commented below lines of code to make failsafe action activated without battery health status check
+and skipping power supply checks:
+
+	if (circuit_breaker_enabled_by_val(_param_cbrk_supply_chk.get(), CBRK_SUPPLY_CHK_KEY)) {
+		// Reset related failsafe flags otherwise failures from before disabling the check cause failsafes without reported reason
+		reporter.failsafeFlags().battery_unhealthy = false;
+		reporter.failsafeFlags().battery_low_remaining_time = false;
+		reporter.failsafeFlags().battery_warning = battery_status_s::WARNING_NONE;
+		return;
+	}
+
+
+modification done in megH7-failsafe-testing on 21/08/2026 evening
+____________________________________________________________________________________
+
+Added
+param set-default BAT1_V_CHARGED 4.2
+param set-default BAT1_V_EMPTY 3.2
+in rc.board_default
+
+commented
+atxxxx -b 3 -s start
+in rc.board_extras
+
+On 21-.8-2026 evening while leaving

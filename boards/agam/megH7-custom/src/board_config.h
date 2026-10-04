@@ -58,8 +58,8 @@
 
 /* LEDs are driven with push open drain to support Anode to 5V or 3.3V */
 
-#define GPIO_nLED_BLUE          /* PE3 */  (GPIO_OUTPUT|GPIO_PUSHPULL|GPIO_SPEED_50MHz|GPIO_OUTPUT_SET|GPIO_PORTE|GPIO_PIN3)
-#define GPIO_nLED_GREEN         /* PE4 */  (GPIO_OUTPUT|GPIO_PUSHPULL|GPIO_SPEED_50MHz|GPIO_OUTPUT_SET|GPIO_PORTE|GPIO_PIN4)
+#define GPIO_nLED_BLUE          /* PE2 */  (GPIO_OUTPUT|GPIO_PUSHPULL|GPIO_SPEED_50MHz|GPIO_OUTPUT_SET|GPIO_PORTE|GPIO_PIN2)
+#define GPIO_nLED_GREEN         /* PE3 */  (GPIO_OUTPUT|GPIO_PUSHPULL|GPIO_SPEED_50MHz|GPIO_OUTPUT_SET|GPIO_PORTE|GPIO_PIN3)
 
 #define BOARD_HAS_CONTROL_STATUS_LEDS   1
 #define BOARD_ARMED_STATE_LED           1 // Green LED
@@ -100,9 +100,9 @@
 
 
 /* Define Battery Voltage Divider and A per V */
-#define BOARD_BATTERY1_V_DIV         (11.0f)     /* measured with the provided PM board */
+#define BOARD_BATTERY1_V_DIV         (11.0f) 	// (10k + 1k) / 1k = 11
 #define BOARD_BATTERY1_A_PER_V       (40.0f)
-#define BOARD_BATTERY2_V_DIV         (11.0f)     /* measured with the provided PM board */
+// #define BOARD_BATTERY2_V_DIV         (11.0f)     /* measured with the provided PM board */
 
 #define BOARD_BATTERY_ADC_VOLTAGE_FILTER_S 0.075f
 #define BOARD_BATTERY_ADC_CURRENT_FILTER_S 0.125f
@@ -121,10 +121,17 @@
 
 /* PWM
  */
-#define DIRECT_PWM_OUTPUT_CHANNELS   8
-#define DIRECT_INPUT_TIMER_CHANNELS  8
+#define DIRECT_PWM_OUTPUT_CHANNELS   10
+#define DIRECT_INPUT_TIMER_CHANNELS  10
 
 #define BOARD_HAS_PWM  DIRECT_PWM_OUTPUT_CHANNELS
+
+
+/* Spare GPIO */
+
+// #define GPIO_PG6                        /* PG6  */  (GPIO_INPUT|GPIO_PULLUP|GPIO_PORTG|GPIO_PIN6)
+// #define GPIO_PD15                       /* PD15 */  (GPIO_INPUT|GPIO_FLOAT|GPIO_PORTD|GPIO_PIN15)
+// #define GPIO_PG15                       /* PG15 */  (GPIO_INPUT|GPIO_PULLUP|GPIO_PORTG|GPIO_PIN15)
 
 
 /* Tone alarm output */
@@ -140,16 +147,17 @@
 
 /* USB OTG FS
  *
- * PE2  OTG_FS_VBUS VBUS sensing
+ * PE4  OTG_FS_VBUS VBUS sensing
  */
 
-#define GPIO_OTGFS_VBUS         /* PE2 */ (GPIO_INPUT|GPIO_PULLDOWN|GPIO_SPEED_100MHz|GPIO_PORTE|GPIO_PIN2)
+#define GPIO_OTGFS_VBUS         /* PE4 */ (GPIO_INPUT|GPIO_PULLDOWN|GPIO_SPEED_100MHz|GPIO_PORTE|GPIO_PIN4)
 
-#define BOARD_ADC_USB_CONNECTED (px4_arch_gpioread(GPIO_OTGFS_VBUS))
+//#define BOARD_ADC_USB_CONNECTED (px4_arch_gpioread(GPIO_OTGFS_VBUS))
 
 /* High-resolution timer */
 #define HRT_TIMER               2  /* use timer8 for the HRT */
 #define HRT_TIMER_CHANNEL       1  /* use capture/compare channel 3 */
+
 
 /* RC Serial port */
 #define RC_SERIAL_PORT          "/dev/ttyS4"
@@ -180,7 +188,7 @@
 
 #define BOARD_ENABLE_CONSOLE_BUFFER
 
-#define BOARD_NUM_IO_TIMERS 3
+#define BOARD_NUM_IO_TIMERS 4
 
 
 __BEGIN_DECLS
