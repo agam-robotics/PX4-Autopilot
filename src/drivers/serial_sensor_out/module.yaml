@@ -1,0 +1,30 @@
+module_name: serial_sensor_out
+serial_config:
+    - command: serial_sensor_out start -d ${SERIAL_DEV} -b p:${BAUD_PARAM}
+      port_config_param:
+        name: SSO_CONFIG
+        group: Serial Sensor Output
+        default: TEL1
+parameters:
+- group: Serial Sensor Output
+  definitions:
+    SSO_MAV_SYSID:
+      description:
+        short: MAVLink system ID
+        long: |-
+          Should match the flight controller's system ID, so the node is seen
+          as one of its components.
+      type: int32
+      default: 1
+      min: 1
+      max: 255
+    SSO_MAV_COMPID:
+      description:
+        short: MAVLink component ID
+        long: |-
+          Must differ from the flight controller's component ID. ArduPilot drops
+          messages whose system and component ID both match its own.
+      type: int32
+      default: 158
+      min: 1
+      max: 255

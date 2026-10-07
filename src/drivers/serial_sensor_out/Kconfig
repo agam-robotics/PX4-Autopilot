@@ -1,0 +1,6 @@
+menuconfig DRIVERS_SERIAL_SENSOR_OUT
+	bool "serial_sensor_out"
+	default n
+	---help---
+		Transmit-only MAVLink output of optical flow and distance sensor data
+		over a serial port, for sensor nodes without a CAN connection.
