@@ -8,6 +8,33 @@ serial_config:
 parameters:
 - group: Serial Sensor Output
   definitions:
+    SSO_PROTO:
+      description:
+        short: Output protocol
+        long: |-
+          Auto detects the flight controller: MAVLink for PX4 and ArduPilot from
+          their HEARTBEAT, MSP for INAV and Betaflight from their reply to an
+          MSP_FC_VARIANT request. Falls back to MAVLink when nothing is received
+          for 10 seconds.
+      type: enum
+      values:
+        0: Auto
+        1: MAVLink
+        2: MSP (INAV)
+        3: MSP (Betaflight)
+      default: 0
+      min: 0
+      max: 3
+      reboot_required: true
+    SSO_IMU_RATE:
+      description:
+        short: HIGHRES_IMU rate
+        long: MAVLink only. 0 disables it.
+      type: int32
+      unit: Hz
+      default: 25
+      min: 0
+      max: 100
     SSO_MAV_SYSID:
       description:
         short: MAVLink system ID

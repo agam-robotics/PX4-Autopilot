@@ -46,4 +46,5 @@ px4_add_module(
 		mavlink_c
 		mavlink_c_generate
 		px4_work_queue
+		rc
 	)

@@ -2,5 +2,6 @@ menuconfig DRIVERS_SERIAL_SENSOR_OUT
 	bool "serial_sensor_out"
 	default n
 	---help---
-		Transmit-only MAVLink output of optical flow and distance sensor data
-		over a serial port, for sensor nodes without a CAN connection.
+		Output of optical flow, distance and IMU data over a serial port, for
+		sensor nodes without a CAN connection. MAVLink for PX4 and ArduPilot,
+		MSP for INAV and Betaflight.
