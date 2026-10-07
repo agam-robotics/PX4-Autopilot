@@ -13,3 +13,10 @@ paa3905 -s start
 icm42688p -R 0 -B 258 -s start
 
 afbrs50 start
+
+# Serial build: fit flow and distance output into a 115200 baud link
+if param greater -s SSO_CONFIG 0
+then
+	param set-default SER_TEL1_BAUD 115200
+	param set-default SENS_FLOW_RATE 50
+fi
