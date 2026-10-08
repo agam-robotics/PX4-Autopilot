@@ -95,26 +95,22 @@ When optical flow is the only source of horizontal position/velocity, lowering t
 Agam FloRange reports the mounting orientation of its distance sensor to the flight controller, as set on the module by [SENS_AFBR_ROT](#SENS_AFBR_ROT) (downward facing by default).
 A module mounted facing horizontally can therefore be used for [Collision Prevention](../computer_vision/collision_prevention.md), alongside a downward-facing module used for optical flow and height:
 
-- On the horizontal module, set [SENS_AFBR_ROT](#SENS_AFBR_ROT) to its yaw rotation, for example `0` (No rotation) when facing forward.
+- On the horizontal module, set [SENS_AFBR_ROT](#SENS_AFBR_ROT) to its yaw rotation, for example `0` (No rotation) when facing forward, and reboot the module.
+  Optical flow is disabled on a module that is not facing down.
 - Leave the downward-facing module at its default.
 - To tell identical modules apart and configure each one, see [Node ID Allocation](index.md#node-id-allocation) and [QGC CANNODE Parameter Configuration](index.md#qgc-cannode-parameter-configuration).
 
 [UAVCAN_RNG_ROT](../advanced_config/parameter_reference.md#UAVCAN_RNG_ROT) on the flight controller only applies to rangefinders that do not report their own orientation, and can be left at its default.
 
-::: warning
-Optical flow from a module that is not facing down does not measure ground motion.
-With more than one module connected, PX4 uses the optical flow of whichever module it detects first, so optical flow fusion is not reliable in this configuration.
-:::
-
 ## Agam FloRange Configuration
 
 On the module, you may need to configure the following parameters:
 
-| Parameter                                                                                                | Description                                                                                                                           |
-| -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| <a id="CANNODE_NODE_ID"></a>[CANNODE_NODE_ID](../advanced_config/parameter_reference.md#CANNODE_NODE_ID) | CAN node ID (0 for dynamic allocation). If set to 0 (default), dynamic node allocation is used. Set to 1-125 to use a static node ID. |
-| <a id="CANNODE_TERM"></a>[CANNODE_TERM](../advanced_config/parameter_reference.md#CANNODE_TERM)          | CAN built-in bus termination.                                                                                                         |
-| <a id="SENS_AFBR_ROT"></a>[SENS_AFBR_ROT](../advanced_config/parameter_reference.md#SENS_AFBR_ROT)       | Distance sensor mounting orientation. Downward facing by default; see [Collision Prevention](#collision-prevention).                  |
+| Parameter                                                                                                | Description                                                                                                                              |
+| -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| <a id="CANNODE_NODE_ID"></a>[CANNODE_NODE_ID](../advanced_config/parameter_reference.md#CANNODE_NODE_ID) | CAN node ID (0 for dynamic allocation). If set to 0 (default), dynamic node allocation is used. Set to 1-125 to use a static node ID.    |
+| <a id="CANNODE_TERM"></a>[CANNODE_TERM](../advanced_config/parameter_reference.md#CANNODE_TERM)          | CAN built-in bus termination.                                                                                                            |
+| <a id="SENS_AFBR_ROT"></a>[SENS_AFBR_ROT](../advanced_config/parameter_reference.md#SENS_AFBR_ROT)       | Module mounting orientation. Optical flow is only enabled when facing down (default); see [Collision Prevention](#collision-prevention). |
 
 ## LED Meanings
 
