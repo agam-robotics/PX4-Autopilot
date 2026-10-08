@@ -92,6 +92,13 @@ When optical flow is the only source of horizontal position/velocity, lowering t
 
 ### Collision Prevention
 
+::: warning
+The distance sensor has a very narrow field of view: it measures along a single beam about 2° wide, which covers a spot roughly 7 cm across at 2 m.
+Obstacles outside that beam, including thin ones such as poles, wires and branches, are not detected.
+Agam FloRange is not suited as the main sensor for Collision Prevention.
+Use it only as an additional safety measure, and do not rely on it alone to avoid obstacles.
+:::
+
 Agam FloRange reports the mounting orientation of its distance sensor to the flight controller, as set on the module by [SENS_AFBR_ROT](#SENS_AFBR_ROT) (downward facing by default).
 A module mounted facing horizontally can therefore be used for [Collision Prevention](../computer_vision/collision_prevention.md), alongside a downward-facing module used for optical flow and height:
 
