@@ -23,7 +23,7 @@ Order this module from:
     - Supports synchronized multi-chip operation and automatic mode switching
   - Broadcom AFBR-S50LV85D Time-of-Flight Distance Sensor
     - Integrated 850 nm laser light source, Laser Class 1 eye safe
-    - Field-of-View (FoV) of 12.4° x 6.2° with 32 pixels, 1.55° x 1.55° each
+    - Field-of-View (FoV) of 12.4° x 5.4° with 32 pixels, 1.55° x 1.55° each
     - 2° x 2° transmitter beam
     - Typical distance range up to 30m, unambiguous range up to 100m in dual frequency mode
     - Measurement rates of up to 3 kHz
