@@ -13,3 +13,5 @@ paa3905 -s start
 icm42688p -R 0 -B 258 -s start
 
 afbrs50 start
+
+# CI smoke test, not for merging
