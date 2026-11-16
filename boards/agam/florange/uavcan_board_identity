@@ -8,7 +8,7 @@ add_definitions(
 
 set(uavcanblid_hw_version_major 7)
 set(uavcanblid_hw_version_minor 147)
-set(uavcanblid_name "\"org.agam.can-floRange\"")
+set(uavcanblid_name "\"org.agam.florange\"")
 
 add_definitions(
 	-DHW_UAVCAN_NAME=${uavcanblid_name}
