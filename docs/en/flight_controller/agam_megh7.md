@@ -7,7 +7,7 @@ PX4 does not manufacture this (or any) autopilot.
 Contact the [manufacturer](https://www.agamrobotics.com/) for hardware support or compliance issues.
 :::
 
-The [Agam MegH7](https://www.agamrobotics.com/agammegh7) is an STM32H743 flight controller from [Agam Robotics](https://www.agamrobotics.com/), in a 30.5 x 30.5 mm form factor, with an onboard IMU, barometer, analog OSD, microSD slot, CAN bus and seven UARTs.
+The [Agam MegH7](https://www.agamrobotics.com/agammegh7) is an STM32H743 flight controller from [Agam Robotics](https://www.agamrobotics.com/), in a 30.5 x 30.5mm form factor, with an onboard IMU, barometer, analog OSD, microSD slot, CAN bus and seven UARTs.
 This page describes hardware revision v1.2.
 
 The board has no internal magnetometer, and provides two external I2C buses for a GPS/compass module or other peripherals.
@@ -22,12 +22,12 @@ This flight controller is [manufacturer supported](../flight_controller/autopilo
 
 ### Processor {#processor}
 
-- **Main FMU processor:** [STM32H743VI](https://www.st.com/en/microcontrollers-microprocessors/stm32h743vi.html) (32-bit Arm Cortex-M7, 480 MHz, 2 MB flash, 1 MB RAM)
+- **Main FMU processor:** [STM32H743VI](https://www.st.com/en/microcontrollers-microprocessors/stm32h743vi.html) (32-bit Arm Cortex-M7, 480MHz, 2MB flash, 1MB RAM)
 
 ### Sensors {#sensors}
 
-- **IMU:** [ICM-45686](https://invensense.tdk.com/products/motion-tracking/6-axis/icm-45686/) (SPI2)
-- **Barometer:** [BMP390](https://www.bosch-sensortec.com/en/products/environmental-sensors/pressure-sensors/bmp390/) (I2C2)
+- **IMU:** [InvenSense ICM-45686](https://invensense.tdk.com/products/motion-tracking/6-axis/icm-45686/) (SPI2)
+- **Barometer:** [Bosch BMP390](https://www.bosch-sensortec.com/en/products/environmental-sensors/pressure-sensors/bmp390/) (I2C2)
 - **Magnetometer:** none (connect an external compass to `GPS` or `I2C4`)
 - **OSD:** AT7456E (SPI3)
 
@@ -42,21 +42,21 @@ This flight controller is [manufacturer supported](../flight_controller/autopilo
 - **RC input:** serial RC or PPM on `RX` (USART6)
 - **Parameter storage:** microSD card (a card is required)
 - **SD card:** microSD slot
-- **ESC connector:** JST-SH 1.0 mm 8-pin, carrying `M1`-`M4` (single or 4-in-1 ESCs); `M5`-`M8` are on solder pads
-- **HD video connector:** JST-SH 1.0 mm 6-pin, for systems such as Caddx Vista and DJI Air Unit
+- **ESC connector:** JST-SH 1.0mm 8-pin, carrying `M1`-`M4` (single or 4-in-1 ESCs); `M5`-`M8` are on solder pads
+- **HD video connector:** JST-SH 1.0mm 6-pin, for systems such as Caddx Vista and DJI Air Unit
 - **Dataflash:** optional onboard W25Q128 on SPI1 (assembly option, not fitted on every board, not used by PX4)
 
 ### Electrical Data {#electrical_data}
 
 - **Input voltage:** 2S-8S
-- **BEC outputs:** 5 V, 3 A continuous; 10 V, 3 A continuous
+- **BEC outputs:** 5V, 3A continuous; 10V, 3A continuous
 - **Power monitoring:** 1 analog battery voltage and current input
 
 ### Mechanical Data {#mechanical_data}
 
-- **Dimensions:** 37.5 x 39 x 8.8 mm
-- **Weight:** 10 g
-- **Mounting hole spacing:** 30.5 x 30.5 mm (Φ4 mm holes, with Φ3 mm grommets)
+- **Dimensions:** 37.5 x 39 x 8.8mm
+- **Weight:** 10g
+- **Mounting hole spacing:** 30.5 x 30.5mm (Φ4mm holes, with Φ3mm grommets)
 
 ## Where to Buy {#store}
 
@@ -69,9 +69,9 @@ The board can be bought from:
 ![Agam MegH7 connector side, with the ESC, GPS, TELEM, RX, CAN, DIGI VTX, SPI4, I2C4 and B/LD connectors](../../assets/flight_controller/agam_megh7/agam_megh7_connectors.jpg)
 
 All the plug-and-play connectors are on the bottom of the board.
-The `GPS`, `TELEM`, `CAN` and `RX` connectors are JST-GH 1.25 mm.
-The `ESC`, `DIGI VTX`, `SPI4`, `I2C4` and `B/LD` connectors are JST-SH 1.0 mm.
-Signal pins are 3.3 V.
+The `GPS`, `TELEM`, `CAN` and `RX` connectors are JST-GH 1.25mm.
+The `ESC`, `DIGI VTX`, `SPI4`, `I2C4` and `B/LD` connectors are JST-SH 1.0mm.
+Signal pins are 3.3V.
 
 | Connector  | Type         | Function                                          |
 | ---------- | ------------ | ------------------------------------------------- |
@@ -82,7 +82,7 @@ Signal pins are 3.3 V.
 | TELEM      | JST-GH 6-pin | Telemetry, with flow control                      |
 | RX         | JST-GH 4-pin | Serial RC or PPM input                            |
 | CAN        | JST-GH 4-pin | CAN bus                                           |
-| DIGI VTX   | JST-SH 6-pin | HD video system, with 10 V supply                 |
+| DIGI VTX   | JST-SH 6-pin | HD video system, with 10V supply                  |
 | SPI4       | JST-SH 8-pin | External SPI, with interrupt and data-ready lines |
 | I2C4       | JST-SH 4-pin | External I2C                                      |
 | B/LD       | JST-SH 4-pin | Passive buzzer and addressable LED strip          |
@@ -92,12 +92,12 @@ CAN, SPI4 and the UART7 flow control lines are on their connectors only.
 See [Solder Pads](#solder_pads) for the pinout.
 
 ::: info
-The buzzer and LED strip outputs are powered from the 5 V BEC, so neither is active when the board is powered from USB alone.
+The buzzer and LED strip outputs are powered from the 5V BEC, so neither is active when the board is powered from USB alone.
 :::
 
 PX4 drives only the first LED of a strip connected to `B/LD`, and uses it as the RGB status LED.
 
-The 10 V supply on `DIGI VTX` pin 1 and on the analog VTX `10V` pad is switched by the processor (PE5).
+The 10V supply on `DIGI VTX` pin 1 and on the analog VTX `10V` pad is switched by the processor (PE5).
 PX4 turns it on at boot.
 
 ## Pinouts {#pinouts}
@@ -155,7 +155,7 @@ PX4 turns it on at boot.
 | 3   | CAN L  | CAN1 via transceiver (PD0 RX) |
 | 4   | GND    |                               |
 
-### DIGI VTX
+### DIGI VTX {#digi_vtx}
 
 | Pin | Signal                             | MCU pin |
 | --- | ---------------------------------- | ------- |
@@ -203,49 +203,49 @@ PX4 does not configure pin 7 (`EXTI`): the SPI bus configuration has a slot for 
 
 The UART pads are marked `Tn` and `Rn`, where `n` is the port number: `Tn` is the transmit pin of UART `n` and `Rn` the receive pin.
 
-| Pad           | Signal              | MCU pin     |
-| ------------- | ------------------- | ----------- |
-| `M1` - `M4`   | Motor outputs 1-4   | PB0, PB1, PA0, PA1 |
-| `M5` - `M8`   | Motor outputs 5-8   | PA2, PA3, PD14, PD15 |
-| `LED`         | Addressable LED strip data | PA8  |
-| `BZ-`         | Buzzer, switched low side | PA15  |
-| `T1` / `R1`   | USART1 TX / RX      | PA9 / PA10  |
-| `T2` / `R2`   | USART2 TX / RX      | PD5 / PD6   |
-| `T3` / `R3`   | USART3 TX / RX      | PD8 / PD9   |
-| `T4` / `R4`   | UART4 TX / RX       | PB9 / PB8   |
-| `T6` / `R6`   | USART6 TX / RX      | PC6 / PC7   |
-| `T7` / `R7`   | UART7 TX / RX       | PE8 / PE7   |
-| `T8` / `R8`   | UART8 TX / RX       | PE1 / PE0   |
-| `SC1` / `SD1` | I2C1 SCL / SDA      | PB6 / PB7   |
-| `SC4` / `SD4` | I2C4 SCL / SDA      | PD12 / PD13 |
-| `CR`          | Battery current sense | PC1       |
-| `D` / `C`     | SWDIO / SWCLK       | PA13 / PA14 |
-| `P2`, `P3`    | Spare user IO, not configured by PX4 | PE15, PE6 |
-| `C13`, `C14`, `C15` | Spare user IO, not configured by PX4 | PC13, PC14, PC15 |
+| Pad                 | Signal                               | MCU pin              |
+| ------------------- | ------------------------------------ | -------------------- |
+| `M1` - `M4`         | Motor outputs 1-4                    | PB0, PB1, PA0, PA1   |
+| `M5` - `M8`         | Motor outputs 5-8                    | PA2, PA3, PD14, PD15 |
+| `LED`               | Addressable LED strip data           | PA8                  |
+| `BZ-`               | Buzzer, switched low side            | PA15                 |
+| `T1` / `R1`         | USART1 TX / RX                       | PA9 / PA10           |
+| `T2` / `R2`         | USART2 TX / RX                       | PD5 / PD6            |
+| `T3` / `R3`         | USART3 TX / RX                       | PD8 / PD9            |
+| `T4` / `R4`         | UART4 TX / RX                        | PB9 / PB8            |
+| `T6` / `R6`         | USART6 TX / RX                       | PC6 / PC7            |
+| `T7` / `R7`         | UART7 TX / RX                        | PE8 / PE7            |
+| `T8` / `R8`         | UART8 TX / RX                        | PE1 / PE0            |
+| `SC1` / `SD1`       | I2C1 SCL / SDA                       | PB6 / PB7            |
+| `SC4` / `SD4`       | I2C4 SCL / SDA                       | PD12 / PD13          |
+| `CR`                | Battery current sense                | PC1                  |
+| `D` / `C`           | SWDIO / SWCLK                        | PA13 / PA14          |
+| `P2`, `P3`          | Spare user IO, not configured by PX4 | PE15, PE6            |
+| `C13`, `C14`, `C15` | Spare user IO, not configured by PX4 | PC13, PC14, PC15     |
 
 `CAM`, `CC` and `VTX` are the analog video pads and do not connect to the processor; see [OSD](#osd).
 The remaining pads are power and ground.
 
 ### Analog Inputs
 
-The `A1` and `A2` pads connect directly to the processor, with no voltage divider, so their input must not exceed 3.3 V.
+The `A1` and `A2` pads connect directly to the processor, with no voltage divider, so their input must not exceed 3.3V.
 
-| Pad   | MCU pin | Use in PX4                                                                                                                                                  |
-| ----- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `RSS` | PC5     | Analog RSSI input. Used only if the receiver does not report RSSI and `RC_RSSI_PWM_CHAN` is not set. PX4 starts using it once the input has exceeded 2.5 V. |
-| `A1`  | PC4     | Analog airspeed sensor, enabled by setting [SENS_DPRES_ANSC](../advanced_config/parameter_reference.md#SENS_DPRES_ANSC)                                     |
-| `A2`  | PA4     | Not used                                                                                                                                                    |
+| Pad   | MCU pin | Use in PX4                                                                                                                                                 |
+| ----- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `RSS` | PC5     | Analog RSSI input. Used only if the receiver does not report RSSI and `RC_RSSI_PWM_CHAN` is not set. PX4 starts using it once the input has exceeded 2.5V. |
+| `A1`  | PC4     | Analog airspeed sensor, enabled by setting [SENS_DPRES_ANSC](../advanced_config/parameter_reference.md#SENS_DPRES_ANSC)                                    |
+| `A2`  | PA4     | Not used                                                                                                                                                   |
 
 ## Block Diagram {#block_diagram}
 
 The block diagram below shows the main components and how they connect to the STM32H743VI.
 
-![Agam MegH7 block diagram: the STM32H743VI with its IMU, barometer, OSD, optional dataflash and microSD card, the external connectors and their buses, the motor timer groups, the solder pads, and the power tree from the battery and USB through the 5 V and 10 V BECs to the 3.3 V rail](../../assets/flight_controller/agam_megh7/block_diagram.svg "Agam MegH7 Block Diagram")
+![Agam MegH7 block diagram: the STM32H743VI with its IMU, barometer, OSD, optional dataflash and microSD card, the external connectors and their buses, the motor timer groups, the solder pads, and the power tree from the battery and USB through the 5V and 10V BECs to the 3.3V rail](../../assets/flight_controller/agam_megh7/block_diagram.svg "Agam MegH7 Block Diagram")
 
 ## Power {#power}
 
 The battery connects either through the `ESC` connector (pin 1 `VBAT`, pin 2 `GND`) or to the `BAT` and `G` pads.
-The board accepts 2S-8S LiPo, and its BECs supply 5 V and 10 V at up to 3 A each.
+The board accepts 2S-8S LiPo, and its BECs supply 5V and 10V at up to 3A each.
 
 Battery voltage and current are measured by analog inputs, with current from the ESC's current sensor on `ESC` pin 3.
 PX4 sets [BAT1_V_DIV](../advanced_config/parameter_reference.md#BAT1_V_DIV) to `11` and [BAT1_A_PER_V](../advanced_config/parameter_reference.md#BAT1_A_PER_V) to `40` by default.
@@ -254,31 +254,31 @@ Set `BAT1_A_PER_V` to match your ESC's current sensor, and see [Battery Estimati
 ## Voltage Ratings {#voltage_ratings}
 
 The board is powered either from the battery, through `ESC` pin 1 or the `BAT` and `G` pads, or from USB.
-Both BECs are step-down SMPS regulators running directly off the battery, and the 3.3 V rail comes from an LDO on the 5 V rail.
+Both BECs are step-down SMPS regulators running directly off the battery, and the 3.3V rail comes from an LDO on the 5V rail.
 
 **Normal Operation Maximum Ratings**
 
 Under these conditions the board powers normally:
 
-1. Battery input: 5.5 V to 36 V, with 2S to 8S LiPo recommended (6.6 V to 33.6 V)
-2. USB input: 4.75 V to 5.25 V
+1. Battery input: 5.5V to 36V, with 2S to 8S LiPo recommended (6.6V to 33.6V)
+2. USB input: 4.75V to 5.25V
 
 **Absolute Maximum Ratings**
 
 Under these conditions the board is not damaged, but may not operate:
 
-1. Battery input: 40 V, the input absolute maximum of the BEC regulators
-2. USB input: 6 V, the input absolute maximum of the LDO
+1. Battery input: 40V, the input absolute maximum of the BEC regulators
+2. USB input: 6V, the input absolute maximum of the LDO
 
 ::: info
 The BECs are step-down only, with a maximum duty cycle of 92%, so each rail needs headroom above its output voltage.
-The 5 V rail needs roughly 5.5 V in, which is the lower figure above.
+The 5V rail needs roughly 5.5V in, which is the lower figure above.
 A 2S pack is flat before it reaches that, so the pack sets the practical floor, not the regulator.
 :::
 
 ::: warning
-The outputs fed from the 10 V BEC (`DIGI VTX` pin 1, the switched `10V` pad in the analog VTX group, and the unswitched `10V` pad) have a narrower input range than the board itself.
-That rail needs roughly 11 V in, so it is unavailable on 2S and marginal on 3S.
+The outputs fed from the 10V BEC (`DIGI VTX` pin 1, the switched `10V` pad in the analog VTX group, and the unswitched `10V` pad) have a narrower input range than the board itself.
+That rail needs roughly 11V in, so it is unavailable on 2S and marginal on 3S.
 The battery figures above apply to a board with nothing on those outputs; with an HD air unit or an analog VTX fitted, use 4S or above.
 :::
 
@@ -292,14 +292,14 @@ Outputs that share a timer form a group, and must use the same output rate and p
 
 | Output | MCU pin | Timer group |
 | ------ | ------- | ----------- |
-| M1     | PB0     | 1 (TIM3)    |
-| M2     | PB1     | 1 (TIM3)    |
-| M3     | PA0     | 2 (TIM5)    |
-| M4     | PA1     | 2 (TIM5)    |
-| M5     | PA2     | 2 (TIM5)    |
-| M6     | PA3     | 2 (TIM5)    |
-| M7     | PD14    | 3 (TIM4)    |
-| M8     | PD15    | 3 (TIM4)    |
+| `M1`   | PB0     | 1 (TIM3)    |
+| `M2`   | PB1     | 1 (TIM3)    |
+| `M3`   | PA0     | 2 (TIM5)    |
+| `M4`   | PA1     | 2 (TIM5)    |
+| `M5`   | PA2     | 2 (TIM5)    |
+| `M6`   | PA3     | 2 (TIM5)    |
+| `M7`   | PD14    | 3 (TIM4)    |
+| `M8`   | PD15    | 3 (TIM4)    |
 
 ## SD Card {#sd_card}
 
@@ -325,6 +325,10 @@ UART8 is also offered as `EXT2` in the serial port configuration, so assigning `
 Leave `EXT2` unassigned unless you are not using ESC telemetry.
 :::
 
+::: info
+The bootloader enables only USART1 (`GPS` connector), so to flash firmware over a UART with [`px4_uploader.py`](https://github.com/PX4/PX4-Autopilot/blob/main/Tools/px4_uploader.py) you must connect to the `GPS` connector.
+:::
+
 ## Assembly {#assembly}
 
 ### Radio Control {#radio_control}
@@ -339,7 +343,7 @@ PWM receivers (one wire per channel) must be connected through a PPM encoder.
 The board cannot power-cycle Spektrum receivers for binding.
 
 ::: tip
-To use SBUS from a DJI or Caddx air unit on `DIGI VTX` pin 6 instead, set [RC_PORT_CONFIG](../advanced_config/parameter_reference.md#RC_PORT_CONFIG) to `TELEM 3` (see [DIGI VTX](#digi-vtx)).
+To use SBUS from a DJI or Caddx air unit on `DIGI VTX` pin 6 instead, set [RC_PORT_CONFIG](../advanced_config/parameter_reference.md#RC_PORT_CONFIG) to `TELEM 3` (see [DIGI VTX](#digi_vtx)).
 :::
 
 See [Radio Control Systems](../getting_started/rc_transmitter_receiver.md) for more information about selecting a radio system and receiver.
@@ -379,7 +383,7 @@ The port is used in single-wire mode, so wire the transmitter to the `T` pad of 
 
 Band, channel and power are then set with [VTX_BAND](../advanced_config/parameter_reference.md#VTX_BAND), [VTX_CHANNEL](../advanced_config/parameter_reference.md#VTX_CHANNEL) and [VTX_POWER](../advanced_config/parameter_reference.md#VTX_POWER), or from an RC switch with [VTX_MAP_CONFIG](../advanced_config/parameter_reference.md#VTX_MAP_CONFIG).
 
-## PX4 Bootloader Update {#bootloader}
+## PX4 Bootloader Update {#px4_bootloader_update}
 
 The board ships with non-PX4 firmware pre-installed.
 Before PX4 firmware can be installed, the _PX4 bootloader_ must be flashed.
@@ -389,7 +393,7 @@ Download the [agam_megh7_bootloader.bin](https://github.com/PX4/PX4-Autopilot/ra
 
 ::: tip
 From PX4 v2.0, most users will not need to build this firmware.
-It will be pre-built and automatically installed by _QGroundControl_ when appropriate hardware is connected.
+It is pre-built and automatically installed by _QGroundControl_ when appropriate hardware is connected.
 :::
 
 To [build PX4](../dev_setup/building_px4.md) for this target:
@@ -415,8 +419,8 @@ Firmware can be installed in any of the normal ways:
 
 In addition to the [basic configuration](../config/index.md), the following parameters are important:
 
-| Parameter                                                            | Setting                                                                                                              |
-| -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Parameter                                                            | Setting                                                                                                                 |
+| -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | [SYS_HAS_MAG](../advanced_config/parameter_reference.md#SYS_HAS_MAG) | Set to `0` by default, since the board has no internal magnetometer. Set it to `1` after attaching an external compass. |
 
 ## Debug Port {#debug_port}
@@ -429,13 +433,13 @@ The NSH shell is available over USB through the [MAVLink Shell](../debug/mavlink
 ### SWD
 
 The [SWD interface](../debug/swd_debug.md) (JTAG) pins are exposed as solder pads on the top of the board, next to the boxed `SW` label.
-The pads do not follow either of the Pixhawk Debug connector standards, so wires must be soldered to them:
+The pads do not follow the [Pixhawk Debug Full](../debug/swd_debug.md#pixhawk-debug-full) or [Pixhawk Debug Mini](../debug/swd_debug.md#pixhawk-debug-mini) connector standard, so wires must be soldered to them:
 
 - `SWDIO`: pad marked `D`
 - `SWCLK`: pad marked `C`
 - `GND`: any pad marked `G`
 
-The board has no 3.3 V solder pad: the `3V3` marking on the right-hand edge is a power rail indicator LED, not a pad.
+The board has no 3.3V solder pad: the `3V3` marking on the right-hand edge is a power rail indicator LED, not a pad.
 
 ## Further Information {#further_information}
 
