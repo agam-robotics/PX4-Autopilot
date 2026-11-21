@@ -64,7 +64,7 @@ The board can be bought from:
 
 - [Agam Robotics](https://www.agamrobotics.com/shop)
 
-## Connectors
+## Pinouts {#pinouts}
 
 ![Agam MegH7 connector side, with the ESC, GPS, TELEM, RX, CAN, DIGI VTX, SPI4, I2C4 and B/LD connectors](../../assets/flight_controller/agam_megh7/agam_megh7_connectors.jpg)
 
@@ -77,15 +77,15 @@ Signal pins are 3.3V.
 | ---------- | ------------ | ------------------------------------------------- |
 | USB Type-C |              | Firmware and configuration                        |
 | microSD    |              | Logging and parameter storage                     |
-| ESC        | JST-SH 8-pin | Motor outputs, current sense, ESC telemetry       |
-| GPS        | JST-GH 6-pin | GPS and I2C1                                      |
-| TELEM      | JST-GH 6-pin | Telemetry, with flow control                      |
-| RX         | JST-GH 4-pin | Serial RC or PPM input                            |
-| CAN        | JST-GH 4-pin | CAN bus                                           |
-| DIGI VTX   | JST-SH 6-pin | HD video system, with 10V supply                  |
-| SPI4       | JST-SH 8-pin | External SPI, with interrupt and data-ready lines |
-| I2C4       | JST-SH 4-pin | External I2C                                      |
-| B/LD       | JST-SH 4-pin | Passive buzzer and addressable LED strip          |
+| `ESC`      | JST-SH 8-pin | Motor outputs, current sense, ESC telemetry       |
+| `GPS`      | JST-GH 6-pin | GPS and I2C1                                      |
+| `TELEM`    | JST-GH 6-pin | Telemetry, with flow control                      |
+| `RX`       | JST-GH 4-pin | Serial RC or PPM input                            |
+| `CAN`      | JST-GH 4-pin | CAN bus                                           |
+| `DIGI VTX` | JST-SH 6-pin | HD video system, with 10V supply                  |
+| `SPI4`     | JST-SH 8-pin | External SPI, with interrupt and data-ready lines |
+| `I2C4`     | JST-SH 4-pin | External I2C                                      |
+| `B/LD`     | JST-SH 4-pin | Passive buzzer and addressable LED strip          |
 
 The top of the board also breaks out solder pads: the motor outputs `M1`-`M8`, the UART pads `T1`/`R1` through `T8`/`R8`, the I2C pads `SC1`/`SD1` and `SC4`/`SD4`, the analog camera and VTX groups, the analog inputs `RSS`, `A1` and `A2`, the spare user IO pads `P2`, `P3`, `C13`, `C14` and `C15`, and power and ground pads.
 CAN, SPI4 and the UART7 flow control lines are on their connectors only.
@@ -100,8 +100,6 @@ PX4 drives only the first LED of a strip connected to `B/LD`, and uses it as the
 The 10V supply on `DIGI VTX` pin 1 and on the analog VTX `10V` pad is switched by the processor (PE5).
 PX4 turns it on at boot.
 
-## Pinouts {#pinouts}
-
 ### ESC
 
 | Pin | Signal                   | MCU pin |
@@ -110,10 +108,10 @@ PX4 turns it on at boot.
 | 2   | GND                      |         |
 | 3   | Current sense            | PC1     |
 | 4   | ESC telemetry (UART8 RX) | PE0     |
-| 5   | M1                       | PB0     |
-| 6   | M2                       | PB1     |
-| 7   | M3                       | PA0     |
-| 8   | M4                       | PA1     |
+| 5   | `M1`                     | PB0     |
+| 6   | `M2`                     | PB1     |
+| 7   | `M3`                     | PA0     |
+| 8   | `M4`                     | PA1     |
 
 ### GPS
 
@@ -352,6 +350,7 @@ See [Radio Control Systems](../getting_started/rc_transmitter_receiver.md) for m
 
 Connect a GPS/compass module to the `GPS` connector (GPS1 on USART1, compass on I2C1).
 The board has no internal magnetometer, so an external compass is needed for most flight modes.
+[SYS_HAS_MAG](../advanced_config/parameter_reference.md#SYS_HAS_MAG) is set to `0` by default: set it to `1` after attaching an external compass.
 PX4 also probes for an external compass on `I2C4`.
 See [Mounting a Compass](../assembly/mount_gps_compass.md) for placement.
 
@@ -383,16 +382,16 @@ The port is used in single-wire mode, so wire the transmitter to the `T` pad of 
 
 Band, channel and power are then set with [VTX_BAND](../advanced_config/parameter_reference.md#VTX_BAND), [VTX_CHANNEL](../advanced_config/parameter_reference.md#VTX_CHANNEL) and [VTX_POWER](../advanced_config/parameter_reference.md#VTX_POWER), or from an RC switch with [VTX_MAP_CONFIG](../advanced_config/parameter_reference.md#VTX_MAP_CONFIG).
 
-## PX4 Bootloader Update {#px4_bootloader_update}
+## PX4 Bootloader Update {#bootloader}
 
 The board ships with non-PX4 firmware pre-installed.
 Before PX4 firmware can be installed, the _PX4 bootloader_ must be flashed.
-Download the [agam_megh7_bootloader.bin](https://github.com/PX4/PX4-Autopilot/raw/main/boards/agam/megh7/extras/agam_megh7_bootloader.bin) bootloader binary and read [this page](../advanced_config/bootloader_update_from_betaflight.md) for flashing instructions.
+Download the [agam_megh7_bootloader.bin](https://github.com/PX4/PX4-Autopilot/raw/main/boards/agam/megh7/extras/agam_megh7_bootloader.bin) bootloader binary and follow [PX4 Bootloader Flashing onto Betaflight Systems](../advanced_config/bootloader_update_from_betaflight.md) to flash it.
 
 ## Building Firmware {#building_firmware}
 
 ::: tip
-From PX4 v2.0, most users will not need to build this firmware.
+From PX4 v2.0, most users will not need to build this firmware!
 It is pre-built and automatically installed by _QGroundControl_ when appropriate hardware is connected.
 :::
 
@@ -402,26 +401,13 @@ To [build PX4](../dev_setup/building_px4.md) for this target:
 make agam_megh7_default
 ```
 
-## Installing PX4 Firmware
+To build and upload the firmware:
 
-Firmware can be installed in any of the normal ways:
+```sh
+make agam_megh7_default upload
+```
 
-- Build and upload the source:
-
-  ```sh
-  make agam_megh7_default upload
-  ```
-
-- [Load the firmware](../config/firmware.md) using _QGroundControl_.
-  You can use either pre-built firmware or your own custom firmware.
-
-## PX4 Configuration
-
-In addition to the [basic configuration](../config/index.md), the following parameters are important:
-
-| Parameter                                                            | Setting                                                                                                                 |
-| -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| [SYS_HAS_MAG](../advanced_config/parameter_reference.md#SYS_HAS_MAG) | Set to `0` by default, since the board has no internal magnetometer. Set it to `1` after attaching an external compass. |
+You can also [load the firmware](../config/firmware.md) using _QGroundControl_, either pre-built or your own custom build.
 
 ## Debug Port {#debug_port}
 
