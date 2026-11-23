@@ -23,6 +23,7 @@ In order to move away from (or parallel to) an obstacle, the user must command t
 The algorithm will make minor adjustments to the setpoint direction if it is determined that a “better” setpoint exists within a fixed margin on either side of the requested setpoint.
 
 When _Collision Prevention_ starts cutting the commanded motion by more than half, _QGroundControl_ shows the distance and bearing of the closest obstacle within 45° of the commanded direction.
+No message is shown if motion is blocked because there is no range data in that direction, or on flash-constrained boards.
 
 PX4 software setup is covered in the next section.
 If you are using a distance sensor attached to your flight controller for collision prevention, it will need to be attached and configured as described in [PX4 Distance Sensor](#rangefinder).

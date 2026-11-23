@@ -33,6 +33,8 @@
 
 #include <gtest/gtest.h>
 #include "CollisionPrevention.hpp"
+#include <px4_platform_common/events.h>
+#include <uORB/topics/event.h>
 
 using namespace matrix;
 
@@ -566,6 +568,158 @@ TEST_F(CollisionPreventionTest, goNoData)
 	cp.modifySetpoint(modified_setpoint, curr_vel);
 	EXPECT_FLOAT_EQ(modified_setpoint.norm(), original_setpoint.norm());
 	orb_unadvertise(obstacle_distance_pub);
+}
+
+static int countLimitingEvents(uORB::Subscription &event_sub)
+{
+	int count = 0;
+	event_s event;
+
+	while (event_sub.update(&event)) {
+		if (event.id == events::ID("col_prev_limiting")) {
+			count++;
+		}
+	}
+
+	return count;
+}
+
+static obstacle_distance_s emptyBodyFrameObstacleMessage()
+{
+	obstacle_distance_s message{};
+	message.frame = message.MAV_FRAME_BODY_FRD;
+	message.min_distance = 100;
+	message.max_distance = 2000;
+	message.increment = bin_size;
+
+	for (uint i = 0; i < bin_count; i++) {
+		message.distances[i] = UINT16_MAX;
+	}
+
+	return message;
+}
+
+TEST_F(CollisionPreventionTest, limitingObstacleReportedOnce)
+{
+	// GIVEN: an obstacle straight ahead, closer than CP_DIST
+	TestTimingCollisionPrevention cp;
+	mocked_time = hrt_absolute_time();
+	uORB::Subscription event_sub{ORB_ID(event)};
+	countLimitingEvents(event_sub); // drop events from earlier tests
+
+	float cp_dist = 2.f;
+	param_set(param_handle(px4::params::CP_DIST), &cp_dist);
+	cp.paramsChanged();
+
+	vehicle_attitude_s attitude{};
+	attitude.timestamp = mocked_time;
+	attitude.q[0] = 1.f;
+	orb_advert_t vehicle_attitude_pub = orb_advertise(ORB_ID(vehicle_attitude), &attitude);
+
+	obstacle_distance_s message = emptyBodyFrameObstacleMessage();
+	message.distances[0] = 150;
+	message.timestamp = mocked_time;
+	orb_advert_t obstacle_distance_pub = orb_advertise(ORB_ID(obstacle_distance), &message);
+
+	const Vector2f stick_forward(10, 0);
+	const Vector2f stick_released(0, 0);
+	const Vector2f curr_vel(0, 0);
+
+	auto step = [&](const Vector2f & setpoint) {
+		mocked_time += 100_ms;
+		message.timestamp = mocked_time;
+		orb_publish(ORB_ID(obstacle_distance), obstacle_distance_pub, &message);
+		Vector2f modified_setpoint = setpoint;
+		cp.modifySetpoint(modified_setpoint, curr_vel);
+	};
+
+	// WHEN: the command is held toward the obstacle
+	step(stick_forward);
+
+	// THEN: it is reported once
+	EXPECT_EQ(countLimitingEvents(event_sub), 1);
+
+	for (int i = 0; i < 20; i++) {
+		step(stick_forward);
+	}
+
+	EXPECT_EQ(countLimitingEvents(event_sub), 0);
+
+	// WHEN: the stick is released for less than the re-arm time
+	for (int i = 0; i < 5; i++) {
+		step(stick_released);
+	}
+
+	step(stick_forward);
+
+	// THEN: it is not reported again
+	EXPECT_EQ(countLimitingEvents(event_sub), 0);
+
+	// WHEN: the stick is released for longer than the re-arm time
+	for (int i = 0; i < 11; i++) {
+		step(stick_released);
+	}
+
+	step(stick_forward);
+
+	// THEN: it is reported again
+	EXPECT_EQ(countLimitingEvents(event_sub), 1);
+
+	orb_unadvertise(obstacle_distance_pub);
+	orb_unadvertise(vehicle_attitude_pub);
+}
+
+TEST_F(CollisionPreventionTest, limitingNoDataNotReported)
+{
+	// GIVEN: CP_GO_NO_DATA=0, no guidance, and the only reading 40 deg off the command
+	TestTimingCollisionPrevention cp;
+	mocked_time = hrt_absolute_time();
+	uORB::Subscription event_sub{ORB_ID(event)};
+	countLimitingEvents(event_sub); // drop events from earlier tests
+
+	float cp_dist = 2.f;
+	float cp_guide_ang = 0.f;
+	param_set(param_handle(px4::params::CP_DIST), &cp_dist);
+	param_set(param_handle(px4::params::CP_GUIDE_ANG), &cp_guide_ang);
+	cp.paramsChanged();
+
+	vehicle_attitude_s attitude{};
+	attitude.timestamp = mocked_time;
+	attitude.q[0] = 1.f;
+	orb_advert_t vehicle_attitude_pub = orb_advertise(ORB_ID(vehicle_attitude), &attitude);
+
+	obstacle_distance_s message = emptyBodyFrameObstacleMessage();
+	message.distances[40 / bin_size] = 150;
+	message.timestamp = mocked_time;
+	orb_advert_t obstacle_distance_pub = orb_advertise(ORB_ID(obstacle_distance), &message);
+
+	const Vector2f curr_vel(0, 0);
+
+	auto step = [&]() {
+		mocked_time += 100_ms;
+		message.timestamp = mocked_time;
+		orb_publish(ORB_ID(obstacle_distance), obstacle_distance_pub, &message);
+		Vector2f modified_setpoint(10, 0);
+		cp.modifySetpoint(modified_setpoint, curr_vel);
+		return modified_setpoint;
+	};
+
+	// WHEN: the command points at a bin with no data
+	const Vector2f blocked_setpoint = step();
+
+	// THEN: it is blocked, but the off-axis reading is not named as the cause
+	EXPECT_LT(blocked_setpoint(0), 5.f);
+	EXPECT_EQ(countLimitingEvents(event_sub), 0);
+
+	// WHEN: an obstacle appears in the commanded bin during the same limiting episode
+	message.distances[0] = 150;
+	step();
+
+	// THEN: it is reported
+	EXPECT_EQ(countLimitingEvents(event_sub), 1);
+
+	orb_unadvertise(obstacle_distance_pub);
+	orb_unadvertise(vehicle_attitude_pub);
 }
 
 TEST_F(CollisionPreventionTest, jerkLimit)

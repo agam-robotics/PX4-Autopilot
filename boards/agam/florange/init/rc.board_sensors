@@ -11,6 +11,7 @@ param set-default SENS_IMU_CLPNOTI 0
 
 # Flow only measures ground motion when facing down. SENS_AFBR_ROT describes
 # the whole module, since the flow sensor and rangefinder share a face.
+# Invalid values (8-23) make the rangefinder face down but leave flow off.
 if param compare -s SENS_AFBR_ROT 25
 then
 	paa3905 -s start
